@@ -8,6 +8,21 @@ import { v4 as uuidv4 } from 'uuid';
 export class UrlsController {
   constructor(private readonly urlService: UrlsService) {}
 
+  @Get()
+  async getAllUrls(@Res() res: Response) {
+    try {
+      const urls = await this.urlService.findAll();
+      res.status(200).send({
+        message: 'URLs fetched',
+        data: urls,
+      });
+    } catch (error) {
+      res.status(500).send({
+        message: error.message || 'Internal server error occurred',
+      });
+    }
+  }
+
   @Get('/:urlId')
   async redirectToOriginalUrl(@Param('urlId') urlId: string, @Res() res: Response) {
     try {
